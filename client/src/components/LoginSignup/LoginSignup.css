@@ -1,0 +1,153 @@
+
+.LoginSignup{
+   color:white;
+   display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+ width:70%;
+ height: 80%;
+ background-color: #88BDF1;
+ border-radius: 1rem;
+ overflow: scroll;
+ position: relative;
+
+}
+.returnLogin{
+   background-color: white;
+   width: 50px;
+   height: 50px;
+   border-radius: 50%;
+   position:absolute;
+   left: 2%;
+   top:2%;
+
+}
+.returnLogin:hover{
+   background-color:#f3f6fc;
+
+}
+
+.LoginSignup .companyName{
+   font-size: 4rem;
+   font-weight: 500;
+   margin-bottom: 3rem;
+   text-shadow: 3px 3px rgb(74, 87, 118);
+}
+.inputs{
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   /* background-color: pink; */
+   width: 80%;
+   gap:2rem;
+
+
+}
+.input{
+   background-color: white;
+   display: flex;
+   align-items: center;
+   gap:1rem;
+   padding:1rem;
+   border-radius: 1rem;
+   
+}
+
+.input img{
+   height: 30px;
+   padding-right: 1rem;
+}
+
+.input input{
+   background:transparent;
+   border:none;
+   outline: none;
+   width: 100%;
+   box-shadow: 4px 5px rgb(232, 238, 243);
+
+}
+
+.send_code{
+   display: flex;
+   justify-content: center;
+   width: 20%;
+   color:#6a6868;
+   box-shadow: 4px -5px rgb(232, 238, 243);
+}
+.send_code:hover{
+      cursor: pointer;
+      background-color:#f3f6fc;
+   box-shadow: 3px -4px rgb(207, 217, 225);
+
+}
+
+
+
+
+.forgotPass-signUp{
+   width: 80%;
+  display: flex;
+  justify-content: space-between;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 1rem;
+
+}
+
+
+
+.submit{
+   text-align: center;
+   width:30%;
+   padding:1rem;
+   border-radius: 1rem;
+   background-color: white;
+   color:#6a6868;
+   font-weight: 500;
+   margin:3rem;
+   box-shadow: 4px 5px rgb(232, 238, 243);
+
+}
+
+.submit:hover{
+   cursor: pointer;
+   background-color:#f3f6fc;
+   box-shadow: 3px 4px rgb(207, 217, 225);
+
+}
+
+.Page1_signUpMethods{
+   display: flex;
+   justify-content: space-between;
+   width: 60%;
+}
+
+.Page1_signUpMethods div{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height:4rem;
+   width:4rem;
+   background-color: white;
+   border-radius: 50%;
+}
+
+
+.Page1_signUpMethods div:hover{
+   box-shadow: 0px 0px 5px white;
+}
+
+
+.Page1_signUpMethods img{
+   height:80%;
+   width:80%;
+   background-color: white;
+   border-radius: 50%;
+}
+
+
+
+
+
+
