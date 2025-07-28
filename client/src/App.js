@@ -5,9 +5,9 @@ import SignUp from "./components/LoginSignup/SignUp";
 import { useState } from "react";
 
 function App() {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(() => true);
   function flipLogin(login) {
-    setLogin(!login);
+    setLogin((preval) => !preval);
   }
 
   return (
@@ -16,7 +16,7 @@ function App() {
         {login ? (
           <Login switchSignUp={flipLogin} />
         ) : (
-          <SignUp swithcLogin={flipLogin} />
+          <SignUp switchSignUp={flipLogin} />
         )}
       </div>
     </div>

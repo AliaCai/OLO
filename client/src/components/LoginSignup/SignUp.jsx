@@ -9,7 +9,7 @@ import verification from '../assets/verification_code.png'
 const SignUp = (props) => {
   return (
     <div className='LoginSignup'>
-      <div className="returnLogin" onClick={props.swithcLogin}>
+      <div className="returnLogin" onClick={props.switchSignUp}>
         <img src={leftArrow_icon} alt="go back" />
 
       </div>
