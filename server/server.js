@@ -1,48 +1,32 @@
-//express, bcrypt
+require("dotenv").config();
+//express jwt
 const express = require("express");
-const app = express();
-const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
+const app = express();
 app.use(express.json());
 
-const users = [];
 const posts = [
-  { name: "alia", password: "123456Chy!" },
-  { name: "murphy", password: "passworddd" },
+  { name: "aicai", moreInfo: "123456Chy!" },
+  { name: "murphy", moreInfo: "passworddd" },
 ];
-
-//get users
-app.get("/users", (req, res) => {
-  res.json({ users });
+//get posts
+app.get("/user", authenticateToken, (req, res) => {
+  res.json(posts.filter((post) => post.name === req.user_name));
 });
 
-//post users <-name and password given
-app.post("/users", async (req, res) => {
-  try {
-    const salt = await bcrypt.genSalt();
-    const password = req.body.password;
-    const hashedPassowrd = await bcrypt.hash(password, salt);
-    const user = { name: req.body.name, password: hashedPassowrd };
-    users.push(user);
-    res.status(201).send("sign up user successfully");
-  } catch {
-    res.status(500).send("sign up error");
-  }
-});
-//identify user in users => create 2 accessTokens
-app.post("/users/login", async (req, res) => {
-  const user = users.find((user) => req.body.name === users.name);
-  if (user == null) return res.status(400).send("cannot find the username");
-  //has such username
-  try {
-    if (await bcrypt.compare(req.body.password, user.password)) {
-      res.status(200).send("login successfully");
-    } else {
-      res.status(400).send("incorrect password");
-    }
-  } catch {
-    res.status(500);
-  }
-});
+//function authenticateToken
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.status(401).send("accessToken is not recieved");
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    console.log("user", user);
+    if (err) return res.status(403).send("unmatched accessToken");
+    req.user_name = user.name; //req.user
+    next();
+  });
+}
 
 app.listen(3000);
