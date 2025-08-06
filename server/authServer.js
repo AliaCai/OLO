@@ -12,9 +12,12 @@ const app = express();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const cors = require("cors");
 let register_users = {};
 
 app.use(express.json());
+//cors
+app.use(cors({ origin: "http://localhost:3000" }));
 
 const users = [];
 let refreshTokens = [];
@@ -24,7 +27,6 @@ let refreshTokens = [];
 app.get("/users", (req, res) => {
   res.json({ users });
 });
-
 //send verfication code ==================================================
 app.post("/email_verify", (req, res) => {
   // console.log("email verify", Object.keys(users));
@@ -69,7 +71,9 @@ app.post("/register", async (req, res) => {
     // );
 
     if (await users.find((user) => req.body.email == user.email)) {
-      return res.status(500).send(`${req.body.email} exist already`);
+      return res
+        .status(500)
+        .json({ message: `${req.body.email} exist already` });
     }
 
     if (
@@ -86,12 +90,12 @@ app.post("/register", async (req, res) => {
       delete register_users[req.body.email];
 
       // console.log("\n after removal", register_users);
-      res.status(201).send("sign up user successfully");
+      res.status(200).json({ message: "sign up user successfully" });
     } else {
-      res.status(500).send("verification code is incorrect!");
+      res.status(500).json({ message: "verification code is incorrect!" });
     }
   } catch {
-    res.status(500).send("sign up error");
+    res.status(500).json({ message: "sign up error" });
   }
 });
 
@@ -115,14 +119,16 @@ app.delete("/logout", (req, res) => {
   refreshTokens = refreshTokens.filter(
     (token) => token !== req.body.refreshToken
   );
-  res.status(200).send("user logs out");
+  res.status(200).json({ message: "user logs out" });
 });
 
 //LOGIN.  identify user in users => create 2 accessTokens
 //user log in ==================================================
 app.post("/login", async (req, res) => {
+  console.log("checkpoint", users, "|", req.body);
   const user = users.find((user) => req.body.name === user.name);
-  if (user == null) return res.status(400).send("cannot find the username");
+  if (user == null)
+    return res.status(400).json({ message: "cannot find the username" });
   try {
     if (await bcrypt.compare(req.body.password, user.password)) {
       const accessToken = generateToken(user);
@@ -134,10 +140,10 @@ app.post("/login", async (req, res) => {
         refreshToken: refreshToken,
       });
     } else {
-      res.status(400).send("incorrect password");
+      res.status(500).json({ message: "incorrect password" });
     }
   } catch {
-    res.status(500).send("Interal Service Error");
+    res.status(500).json({ message: "Interal Service Error" });
   }
 });
 
