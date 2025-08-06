@@ -31,7 +31,15 @@ app.get("/users", (req, res) => {
 app.post("/email_verify", (req, res) => {
   // console.log("email verify", Object.keys(users));
   if (users.find((user) => user.email == req.body.email))
-    return res.status(200).send(`${req.body.email} is registered already`);
+    return res
+      .status(500)
+      .json({ message: `${req.body.email} is registered already` });
+
+  if (users.find((user) => user.name == req.body.name))
+    return res
+      .status(500)
+      .json({ message: `${req.body.name} is registered already` });
+
   let verification_code =
     Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
   register_users[req.body.email] = { verification_code: verification_code };
@@ -50,8 +58,11 @@ app.post("/email_verify", (req, res) => {
     text: `This is a reminder for your OLO email verification!\n Your verfication code is :  ${verification_code}.\n\n - OLO`,
   };
   transporter.sendMail(mailOptions, (err, info) => {
-    if (err) return res.status(500).send("email is not sent successfully");
-    res.status(200).send("email is sent already!");
+    if (err)
+      return res
+        .status(500)
+        .json({ message: "email is not sent successfully" });
+    res.status(200).json({ message: "email is sent already!" });
   });
 });
 

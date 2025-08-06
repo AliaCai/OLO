@@ -25,9 +25,15 @@ const SignUp = (props) => {
       headers:{'content-type':'application/json'},
       body:JSON.stringify({email:register.email})
     })
-    toast.success('Verification email is sent!')
-    console.log('verificaion email sent')
     const data=await response.json()
+
+    if(!response.ok){
+        toast.error(`Verification email Error: ${data.message}`)
+
+    }else{
+
+      toast.success('Verification email is sent!')
+    }
   }
 
 
@@ -47,6 +53,9 @@ const SignUp = (props) => {
      toast.error(`Sign up error: ${data.message}`)
     }else{
     toast.success(`Success: ${data.message}`)
+    setTimeout(()=>{      props.switchSignUp()
+
+    },1500)
     }
 
 
