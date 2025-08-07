@@ -1,25 +1,22 @@
+import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./components/LoginSignup/Login";
-import SignUp from "./components/LoginSignup/SignUp";
-import { useState } from "react";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login_Signup from "./components/LoginSignup/Login_Signup";
+import Events from "./components/Events/Events";
+import Header from "./components/Header/Header";
+import SidebBar from "./components/SideBar/SidebBar";
 function App() {
-  const [login, setLogin] = useState(() => true);
-  function flipLogin(login) {
-    setLogin((preval) => !preval);
-  }
-
   return (
-    <div className="Page1">
-      <div className="Page1_Layer1">
-        {login ? (
-          <Login switchSignUp={flipLogin} />
-        ) : (
-          <SignUp switchSignUp={flipLogin} />
-        )}
+    <Router>
+      <Header />
+      <div className="innerPage_row">
+        <SidebBar />
+        <Routes>
+          <Route path="/" element={<Login_Signup />} />
+          <Route path="/events" element={<Events />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
 
