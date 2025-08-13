@@ -7,6 +7,7 @@ jwt: sign, verify
 
 */
 require("dotenv").config();
+const db = require("./db/databasepg");
 const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt");
@@ -100,6 +101,28 @@ app.post("/register", async (req, res) => {
       users.push(user);
       delete register_users[req.body.email];
 
+      //add to db
+      const add_user =
+        "INSERT INTO olo_user(user_name, user_email, user_password,create_time, create_by, update_time, update_by) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+      db.query(
+        add_user,
+        [
+          req.body.name,
+          req.body.email,
+          hashedPassowrd,
+          new Date(),
+          req.body.name,
+          new Date(),
+          req.body.name,
+        ],
+        (err, res) => {
+          if (!err) {
+            console.log("add successfullt", res);
+          } else {
+            console.log("err happens between", err);
+          }
+        }
+      );
       // console.log("\n after removal", register_users);
       res.status(200).json({ message: "sign up user successfully" });
     } else {

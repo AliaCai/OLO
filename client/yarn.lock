@@ -1791,6 +1791,18 @@
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@preact/signals-core@^1.11.0":
+  version "1.11.0"
+  resolved "https://registry.npmjs.org/@preact/signals-core/-/signals-core-1.11.0.tgz"
+  integrity sha512-jglbibeWHuFRzEWVFY/TT7wB1PppJxmcSfUHcK+2J9vBRtiooMfw6tAPttojNYrrpdGViqAYCbPpmWYlMm+eMQ==
+
+"@preact/signals@^2.0.2":
+  version "2.2.1"
+  resolved "https://registry.npmjs.org/@preact/signals/-/signals-2.2.1.tgz"
+  integrity sha512-cX3mijdjHbbz3dBoJ6z687CGYEOp9ifj3uFnm4UKW+DxXKPMvE2y/VSdm0PXhXmHnr6F0iSnDJ+dLwmV7CYT5A==
+  dependencies:
+    "@preact/signals-core" "^1.11.0"
+
 "@remix-run/router@1.23.0":
   version "1.23.0"
   resolved "https://registry.npmjs.org/@remix-run/router/-/router-1.23.0.tgz"
@@ -1842,6 +1854,36 @@
   version "1.12.0"
   resolved "https://registry.npmjs.org/@rushstack/eslint-patch/-/eslint-patch-1.12.0.tgz"
   integrity sha512-5EwMtOqvJMMa3HbmxLlF74e+3/HhwBTMcvt3nqVJgGCozO6hzIPOBlwm8mGVNR9SN2IJpxSnlxczyDjcn7qIyw==
+
+"@schedule-x/calendar@^2.25.0", "@schedule-x/calendar@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.npmjs.org/@schedule-x/calendar/-/calendar-2.36.0.tgz"
+  integrity sha512-UqPMoxjok3SFNvgx1+PY5Whmoig+gU7sjy80z68A9QQ1FjIt1Q3ODPZKdA3G0spDss9lDtKilpO393vWpXJyfg==
+
+"@schedule-x/current-time@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.npmjs.org/@schedule-x/current-time/-/current-time-2.36.0.tgz"
+  integrity sha512-1JOO826jJD6H8g+FlcdN1rIwKCQC10OJsx9zIbTQbTJAUHkKfHG4PVOBwFvWGU3aPkGWpwXQxtdaMv6DNDcxcw==
+
+"@schedule-x/event-modal@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.npmjs.org/@schedule-x/event-modal/-/event-modal-2.36.0.tgz"
+  integrity sha512-dMjgtBhOTy/M/MUy1khGafVqs978zECv2Tb5MM4oBrPOO5ofbuKRpYzIsbnsyz5SsgCX1ThQHTLr7ndN5WocYA==
+
+"@schedule-x/events-service@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.npmjs.org/@schedule-x/events-service/-/events-service-2.36.0.tgz"
+  integrity sha512-M4dz8AgaEtpbXAanvYvuPnEDAKlhMO7d6R8WQ8wX8hXsJSzWa18XS3qLJOT+5jCR7O8QD8aDIDg3RpihleUeiA==
+
+"@schedule-x/react@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.npmjs.org/@schedule-x/react/-/react-2.36.0.tgz"
+  integrity sha512-MZAs67Krn1zmxmmlM1iWUdypmYAiOkIV7Z4wi9PJKWjt4Dtbx8K8Q4kW38aWmfDCImPbfBUGDp3LaP9u53zCzg==
+
+"@schedule-x/theme-default@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.npmjs.org/@schedule-x/theme-default/-/theme-default-2.36.0.tgz"
+  integrity sha512-jkN9/srYS54dO2h12iCvNMMrLEiod6BAoUc47KbOgGE66zyUU+kmQwUOYQ3A2LrKyIWjwtCp3Ewdd4h/HHvG9A==
 
 "@sinclair/typebox@^0.24.1":
   version "0.24.51"
@@ -7928,6 +7970,11 @@ postcss@^7.0.35:
     picocolors "^0.2.1"
     source-map "^0.6.1"
 
+preact@^10.19.2, "preact@>= 10.25.0":
+  version "10.27.0"
+  resolved "https://registry.npmjs.org/preact/-/preact-10.27.0.tgz"
+  integrity sha512-/DTYoB6mwwgPytiqQTh/7SFRL98ZdiD8Sk8zIUVOxtwq4oWcwrcd1uno9fE/zZmUaUrFNYzbH14CPebOz9tZQw==
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
@@ -8112,7 +8159,7 @@ react-dev-utils@^12.0.1:
     strip-ansi "^6.0.1"
     text-table "^0.2.0"
 
-"react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^18 || ^19", "react-dom@^18.0.0 || ^19.0.0", react-dom@^19.1.0, react-dom@>=16.6.0, react-dom@>=16.8:
+"react-dom@^16.7.0 || ^17 || ^18 || ^19", "react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^18 || ^19", "react-dom@^18.0.0 || ^19.0.0", react-dom@^19.1.0, react-dom@>=16.6.0, react-dom@>=16.8:
   version "19.1.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-19.1.0.tgz"
   integrity sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==
@@ -8241,7 +8288,7 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-"react@^17.0.0 || ^18.0.0 || ^19.0.0", "react@^18 || ^19", "react@^18.0.0 || ^19.0.0", react@^19.1.0, "react@>= 16", react@>=16.6.0, react@>=16.8, react@>=16.8.0:
+"react@^16.7.0 || ^17 || ^18 || ^19", "react@^17.0.0 || ^18.0.0 || ^19.0.0", "react@^18 || ^19", "react@^18.0.0 || ^19.0.0", react@^19.1.0, "react@>= 16", react@>=16.6.0, react@>=16.8, react@>=16.8.0:
   version "19.1.0"
   resolved "https://registry.npmjs.org/react/-/react-19.1.0.tgz"
   integrity sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==

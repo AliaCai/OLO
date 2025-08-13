@@ -1,7 +1,7 @@
 require("dotenv").config({ path: "../.env" });
+const { Pool } = require("pg");
 
-const { Client } = require("pg");
-const client = new Client({
+const pool = new Pool({
   host: "localhost",
   user: "postgres",
   port: 5432,
@@ -9,13 +9,4 @@ const client = new Client({
   database: "postgres",
 });
 
-client.connect();
-client.query("SELECT * FROM olo_user", (err, res) => {
-  if (!err) {
-    console.log("response", res.rows);
-  } else {
-    console.log("error", err.message);
-  }
-
-  client.end;
-});
+module.exports = pool;
