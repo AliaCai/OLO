@@ -44,7 +44,7 @@ const Login = (props) => {
     }
 
     }catch(error){
-     toast.error(`Login Error: ${error.message}`)
+     toast.error(`${error.message}`)
     }
 
   }
@@ -72,7 +72,7 @@ const Login = (props) => {
 
         <div className="submit" onClick={handelSubmit}>Log In</div>
 
-            <div className="Page1_signUpMethods">
+            {/* <div className="Page1_signUpMethods">
               <div className="google">
                 <img src={google} alt="google icon" />
               </div>
@@ -84,7 +84,7 @@ const Login = (props) => {
                 <img src={discord} alt="discord icon" />
 
               </div>
-            </div>
+            </div> */}
 
 
           

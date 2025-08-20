@@ -52,6 +52,10 @@
 
 
 }
+.input_err{
+   width: 80%;
+}
+
 .input{
    background-color: white;
    display: flex;
@@ -60,6 +64,10 @@
    padding:1rem;
    border-radius: 1rem;
    
+}
+
+.input_err_verify{
+   display: flex;
 }
 
 .input img{
@@ -74,6 +82,11 @@
    width: 100%;
    box-shadow: 4px 5px rgb(232, 238, 243);
 
+}
+
+.errMsg{
+   margin-top: 1rem;
+   color:rgb(239, 69, 69)
 }
 
 .send_code{
