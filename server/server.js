@@ -19,12 +19,8 @@ app.get("/user", authenticateToken, (req, res) => {
 
 //function authenticateToken
 function authenticateToken(req, res, next) {
-  // const authHeader = req.headers["authorization"];
-  // const token = authHeader && authHeader.split(" ")[1];
-
-  console.log("token is", req.cookies);
-  const token = req.accessToken;
-  console.log("token is", req.signedCookies); //working right now###
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.status(401).send("accessToken is not recieved");
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {

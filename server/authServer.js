@@ -9,6 +9,8 @@ jwt: sign, verify
 require("dotenv").config();
 const db = require("./db/pool");
 const { search_value } = require("./db/db_actions");
+const cookieParser = require("cookie-parser");
+
 const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt");
@@ -19,6 +21,8 @@ let register_users = {};
 
 app.use(express.json());
 //cors
+app.use(cookieParser());
+
 app.use(cors({ origin: "http://localhost:3000", credentials: true })); //credentials for cookies -> remove for pord &&&
 
 const users = [];
@@ -158,13 +162,12 @@ app.post("/login", async (req, res) => {
       const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
       refreshTokens.push(refreshToken);
       // console.log("hey", accessToken, refreshToken);
-      console.log("yes----", accessToken);
       res.cookie("accessToken", accessToken, {
         maxAge: 15 * 60 * 1000, //15min
-        path: "",
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
+        path: "/",
+        httpOnly: false, //true,
+        secure: false, //true,
+        sameSite: "none", //"strict",
       });
 
       res.cookie("refreshToken", refreshToken, {
@@ -175,7 +178,6 @@ app.post("/login", async (req, res) => {
         sameSite: "strict",
       });
 
-      console.log(res.cookie.accessToken, "hye");
       res.status(200).json({
         message:
           "accessToken and refreshToken are generated and added to cookies",
