@@ -7,7 +7,8 @@ jwt: sign, verify
 
 */
 require("dotenv").config();
-const db = require("./db/databasepg");
+const db = require("./db/pool");
+const { search_value } = require("./db/db_actions");
 const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt");
@@ -18,7 +19,7 @@ let register_users = {};
 
 app.use(express.json());
 //cors
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: "http://localhost:3000", credentials: true })); //credentials for cookies -> remove for pord &&&
 
 const users = [];
 let refreshTokens = [];
@@ -29,22 +30,17 @@ app.get("/users", (req, res) => {
   res.json({ users });
 });
 //send verfication code ==================================================
-app.post("/email_verify", (req, res) => {
-  // console.log("email verify", Object.keys(users));
-  if (users.find((user) => user.email == req.body.email))
+app.post("/email_verify", async (req, res) => {
+  const users = await search_value("olo_user", "user_email", req.body.email);
+  if (users.length >= 1)
     return res
       .status(500)
       .json({ message: `${req.body.email} is registered already` });
 
-  if (users.find((user) => user.name == req.body.name))
-    return res
-      .status(500)
-      .json({ message: `${req.body.name} is registered already` });
-
   let verification_code =
     Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
   register_users[req.body.email] = { verification_code: verification_code };
-  // console.log("--------register_users", register_users);
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -76,16 +72,15 @@ app.post("/register", async (req, res) => {
     const hashedPassowrd = await bcrypt.hash(password, salt);
     // console.log(hashedPassowrd, " ", salt);
 
-    // console.log(
-    //   "-------register - register_users",
-    //   register_users,
-    //   register_users[req.body.email]
-    // );
+    const users1 = await search_value("olo_user", "user_name", req.body.name);
+    const users2 = await search_value("olo_user", "user_email", req.body.email);
 
-    if (await users.find((user) => req.body.email == user.email)) {
-      return res
-        .status(500)
-        .json({ message: `${req.body.email} exist already` });
+    if (users1.length >= 1) {
+      return res.status(500).json({ message: `user name exist already` });
+    }
+
+    if (users2.length >= 1) {
+      return res.status(500).json({ message: `user email exist already` });
     }
 
     if (
@@ -93,26 +88,20 @@ app.post("/register", async (req, res) => {
       register_users[req.body.email]["verification_code"] ==
         req.body.verification_code
     ) {
-      const user = {
-        name: req.body.name,
-        password: hashedPassowrd,
-        email: req.body.email,
-      };
-      users.push(user);
       delete register_users[req.body.email];
 
       //add to db
       const add_user =
-        "INSERT INTO olo_user(user_name, user_email, user_password,create_time, create_by, update_time, update_by) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+        "INSERT INTO olo_user(user_name, user_email, user_password, create_by, update_by) VALUES ($1,$2,$3,$4,$5)";
       db.query(
         add_user,
         [
           req.body.name,
           req.body.email,
           hashedPassowrd,
-          new Date(),
+
           req.body.name,
-          new Date(),
+
           req.body.name,
         ],
         (err, res) => {
@@ -135,7 +124,7 @@ app.post("/register", async (req, res) => {
 
 //TOKEN  => take referesh token , generate 1 accessToken
 //refresh token ==================================================
-app.post("/refresh_token", (req, res) => {
+app.post("/refresh", (req, res) => {
   const refreshToken = req.body.refreshToken;
   if (refreshToken == null) res.status(401).send("no refresh token");
   // console.log("---refreshTokens", refreshTokens);
@@ -159,25 +148,49 @@ app.delete("/logout", (req, res) => {
 //LOGIN.  identify user in users => create 2 accessTokens
 //user log in ==================================================
 app.post("/login", async (req, res) => {
-  console.log("checkpoint", users, "|", req.body);
-  const user = users.find((user) => req.body.name === user.name);
-  if (user == null)
-    return res.status(400).json({ message: "cannot find the username" });
+  const users = await search_value("olo_user", "user_name", req.body.name);
+  const user = users && users.length == 1 ? users[0] : null;
+  console.log("users are", user);
+
   try {
-    if (await bcrypt.compare(req.body.password, user.password)) {
+    if (await bcrypt.compare(req.body.password, user.user_password)) {
       const accessToken = generateToken(user);
       const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
       refreshTokens.push(refreshToken);
       // console.log("hey", accessToken, refreshToken);
-      res.json({
-        accessToken: accessToken,
-        refreshToken: refreshToken,
+      console.log("yes----", accessToken);
+      res.cookie("accessToken", accessToken, {
+        maxAge: 15 * 60 * 1000, //15min
+        path: "",
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
       });
+
+      res.cookie("refreshToken", refreshToken, {
+        maxAge: 7 * 24 * 60 * 60 * 1000, //7 days
+        path: "/refresh",
+        secure: true,
+        httpOnly: true,
+        sameSite: "strict",
+      });
+
+      console.log(res.cookie.accessToken, "hye");
+      res.status(200).json({
+        message:
+          "accessToken and refreshToken are generated and added to cookies",
+      });
+
+      // res.clearCookie("accessToken");
     } else {
-      res.status(500).json({ message: "incorrect password" });
+      res
+        .status(500)
+        .json({ message: "User does not exist or incorrect password" });
     }
   } catch {
-    res.status(500).json({ message: "Interal Service Error" });
+    res
+      .status(500)
+      .json({ message: "User does not exist or incorrect password" });
   }
 });
 
