@@ -1,6 +1,7 @@
 require("dotenv").config();
 //express jwt
 const express = require("express");
+const crypto = require("crypto-js");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 
@@ -20,7 +21,11 @@ app.get("/user", authenticateToken, (req, res) => {
 //function authenticateToken
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  const encrypted_token = authHeader && authHeader.split(" ")[1];
+  const token = crypto.AES.decrypt(
+    encrypted_token,
+    process.env.CRYPTO_TOKEN_KEY
+  ).toString(crypto.enc.Utf8);
   if (token == null) return res.status(401).send("accessToken is not recieved");
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {

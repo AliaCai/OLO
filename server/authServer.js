@@ -14,6 +14,7 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt");
+const crypto = require("crypto-js");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
@@ -129,7 +130,16 @@ app.post("/register", async (req, res) => {
 //TOKEN  => take referesh token , generate 1 accessToken
 //refresh token ==================================================
 app.post("/refresh", (req, res) => {
-  const refreshToken = req.body.refreshToken;
+  const encrypted_refreshToken = req.body.refreshToken;
+
+  const refreshToken = crypto.AES.decrypt(
+    encrypted_refreshToken,
+    process.env.CRYPTO_TOKEN_KEY
+  ).toString(crypto.enc.Utf8);
+
+  // console.log("before decryption token", encrypted_refreshToken);
+  // console.log("decrypted refreshtoken is", refreshToken);
+
   if (refreshToken == null) res.status(401).send("no refresh token");
   // console.log("---refreshTokens", refreshTokens);
   if (!refreshTokens.includes(refreshToken)) res.status(403);
@@ -161,16 +171,30 @@ app.post("/login", async (req, res) => {
       const accessToken = generateToken(user);
       const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
       refreshTokens.push(refreshToken);
-      // console.log("hey", accessToken, refreshToken);
-      res.cookie("accessToken", accessToken, {
+      //  console.log("hey", accessToken, refreshToken);
+      const encrypted_at = crypto.AES.encrypt(
+        accessToken,
+        process.env.CRYPTO_TOKEN_KEY
+      ).toString();
+
+      const encrypted_rf = crypto.AES.encrypt(
+        refreshToken,
+        process.env.CRYPTO_TOKEN_KEY
+      ).toString();
+
+      console.log("encypted", encrypted_at);
+      console.log("encypted_rf", encrypted_rf);
+      // console.log("------token key crypto", process.env.CRYPTO_TOKEN_KEY);
+
+      res.cookie("accessToken", encrypted_at, {
         maxAge: 15 * 60 * 1000, //15min
         path: "/",
-        httpOnly: false, //true,
-        secure: false, //true,
-        sameSite: "none", //"strict",
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
       });
 
-      res.cookie("refreshToken", refreshToken, {
+      res.cookie("refreshToken", encrypted_rf, {
         maxAge: 7 * 24 * 60 * 60 * 1000, //7 days
         path: "/refresh",
         secure: true,
