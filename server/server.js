@@ -4,6 +4,7 @@ const express = require("express");
 const crypto = require("crypto-js");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const { instagram } = require("instagram-scraper-api");
 
 const app = express();
 app.use(express.json());
@@ -26,8 +27,8 @@ function authenticateToken(req, res, next) {
     encrypted_token,
     process.env.CRYPTO_TOKEN_KEY
   ).toString(crypto.enc.Utf8);
-  if (token == null) return res.status(401).send("accessToken is not recieved");
 
+  if (token == null) return res.status(401).send("accessToken is not recieved");
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     console.log("user", user);
     if (err) return res.status(403).send("unmatched accessToken");
@@ -35,5 +36,13 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
+
+instagram
+  .user("willsmith")
+  .then((user) => console.log(user))
+  .catch((err) => console.error(err));
+
+console.log("hey");
+//whatever, let me try it out first
 
 app.listen(5000);

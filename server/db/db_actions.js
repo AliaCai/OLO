@@ -9,13 +9,6 @@ function search_value(table_name, column_name, value) {
     db.query(search_query, [value], (err, res) => {
       console.log("which step");
       if (!err) {
-        // if (res.rows.length >= 1) {
-        //   console.log(`find ${column_name}=${value} in ${table_name}`);
-        //   return resolve(res.rows);
-        // } else {
-        //   console.log(`not find  ${column_name}=${value} in ${table_name}`);
-        //   return resolve(false);
-        // }
         return resolve(res.rows);
       } else {
         console.log(`error  ${column_name}=${value} in ${table_name} ${err}`);

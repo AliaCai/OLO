@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:3000", credentials: true })); //credentials for cookies -> remove for pord &&&
 
 const users = [];
-let refreshTokens = [];
+let refreshTokens = [];//store the encrypted refreshToken
 //user:name, password
 
 //get users
@@ -153,6 +153,7 @@ app.post("/refresh", (req, res) => {
 //LOGOUT => take refresh token, remove it
 //user logs out ==================================================
 app.delete("/logout", (req, res) => {
+
   refreshTokens = refreshTokens.filter(
     (token) => token !== req.body.refreshToken
   );
@@ -170,7 +171,6 @@ app.post("/login", async (req, res) => {
     if (await bcrypt.compare(req.body.password, user.user_password)) {
       const accessToken = generateToken(user);
       const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-      refreshTokens.push(refreshToken);
       //  console.log("hey", accessToken, refreshToken);
       const encrypted_at = crypto.AES.encrypt(
         accessToken,
@@ -181,10 +181,7 @@ app.post("/login", async (req, res) => {
         refreshToken,
         process.env.CRYPTO_TOKEN_KEY
       ).toString();
-
-      console.log("encypted", encrypted_at);
-      console.log("encypted_rf", encrypted_rf);
-      // console.log("------token key crypto", process.env.CRYPTO_TOKEN_KEY);
+      refreshTokens.push(encrypted_rf);
 
       res.cookie("accessToken", encrypted_at, {
         maxAge: 15 * 60 * 1000, //15min
