@@ -16,6 +16,7 @@
   "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "chrono-node": "^2.8.4",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
@@ -24,9 +25,12 @@
     "instagram-scraper-api": "^1.0.1",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.7.2",
+    "node-tesseract-ocr": "^2.2.1",
     "nodemailer": "^7.0.5",
     "pg": "^8.16.3",
-    "puppeteer": "^24.19.0"
+    "puppeteer": "^24.19.0",
+    "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
