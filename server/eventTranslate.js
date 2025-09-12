@@ -1,12 +1,32 @@
 const postModel = require("./models/postModel");
 const tesseract = require("node-tesseract-ocr");
 const chrono = require("chrono-node");
+const nlp = require("compromise/two");
 const DateTime = require("luxon");
 const config = {
   lang: "eng",
   oem: 1,
   psm: 3,
 };
+const uwBuildings = [
+  "AL",
+  "B1",
+  "B2",
+  "MC",
+  "M3",
+  "E2",
+  "E3",
+  "E5",
+  "E6",
+  "E7",
+  "ECH",
+  "EV1",
+  "EV2",
+  "EV3",
+  "SCH",
+  "SLC",
+  "PAC",
+];
 const uwcsc = [
   {
     postIgID: "DObYeZMDWdG",
@@ -74,28 +94,45 @@ async function imgToText(img) {
   }
 }
 
+// async function translatePosts(posts) {
+//   for (poster of posts) {
+//     poster.imgText = await imgToText(poster.img);
+//     console.log(
+//       "imgDate is",
+
+//       chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].start
+//         ? chrono.parse(poster.imgText)[0].start.date()
+//         : null,
+//       chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].end
+//         ? chrono.parse(poster.imgText)[0].end.date()
+//         : null
+//     );
+//     console.log(
+//       "desDate is",
+//       chrono.parse(poster.desc)[0] && chrono.parse(poster.desc)[0].start
+//         ? chrono.parse(poster.desc)[0].start.date()
+//         : null,
+//       chrono.parse(poster.desc)[0] && chrono.parse(poster.desc)[0].end
+//         ? chrono.parse(poster.desc)[0].end.date()
+//         : null
+//     );
+//   }
+// }
+
 async function translatePosts(posts) {
   for (poster of posts) {
     poster.imgText = await imgToText(poster.img);
-    console.log(
-      "imgDate is",
+    let imgDate = nlp(poster.imgText).match("#Date").text();
+    let descDate = nlp(poster.desc).match("#Date").text();
+    console.log("hey what is date", [imgDate, descDate], "hey what is date", [
+      chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].text,
+      chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].text,
+    ]);
 
-      chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].start
-        ? chrono.parse(poster.imgText)[0].start.date()
-        : null,
-      chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].end
-        ? chrono.parse(poster.imgText)[0].end.date()
-        : null
-    );
-    console.log(
-      "desDate is",
-      chrono.parse(poster.desc)[0] && chrono.parse(poster.desc)[0].start
-        ? chrono.parse(poster.desc)[0].start.date()
-        : null,
-      chrono.parse(poster.desc)[0] && chrono.parse(poster.desc)[0].end
-        ? chrono.parse(poster.desc)[0].end.date()
-        : null
-    );
+    let imgPlace = nlp(poster.imgText).match("#Place").text(); //  doc.match('(DC|E7|MC) #Value').tag('Place', 'building-room')
+
+    let descPlace = nlp(poster.desc).match("#Place").text();
+    console.log("hey what is location", imgPlace, descPlace);
   }
 }
 
