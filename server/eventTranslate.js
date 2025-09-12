@@ -1,8 +1,8 @@
 const postModel = require("./models/postModel");
 const tesseract = require("node-tesseract-ocr");
-const chrono = require("chrono-node");
-const nlp = require("compromise/two");
-const DateTime = require("luxon");
+// const chrono = require("chrono-node");
+// const nlp = require("compromise/two");
+// const DateTime = require("luxon");
 const { default: ollama } = require("ollama/browser");
 
 const config = {
@@ -10,25 +10,7 @@ const config = {
   oem: 1,
   psm: 3,
 };
-const uwBuildings = [
-  "AL",
-  "B1",
-  "B2",
-  "MC",
-  "M3",
-  "E2",
-  "E3",
-  "E5",
-  "E6",
-  "E7",
-  "ECH",
-  "EV1",
-  "EV2",
-  "EV3",
-  "SCH",
-  "SLC",
-  "PAC",
-];
+
 const uwcsc = [
   {
     postIgID: "DObYeZMDWdG",
@@ -73,12 +55,9 @@ const uwcsc = [
       "\n" +
       "Featuring FREE s’mores, burgers, and fun games, it’s the perfect chance to relax before exams and celebrate the end of the term. Grab your friends and let’s light up the night~!\n" +
       "\n" +
-      "📅 Date: July 21st\n" +
-      "\n" +
-      "⏰ Time: 7-9 PM\n" +
       "\n" +
       "📍 Location: Columbia Lake Fire Pit 1",
-    img: "https://scontent-yyz1-1.cdninstagram.com/v/t51.2885-15/517735285_18050620115451410_8676771341342949000_n.jpg?stp=dst-jpg_e35_s720x720_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEzMzd4MTMzNy5zZHIuZjgyNzg3LmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QH--vMwc-tIVyA_8KdW9Yo45WjHXzbP92M7bd-nMmUZdBr5e9uZb02bRdqNbi3MbzA&_nc_ohc=7JkcDsZg1AcQ7kNvwEcnl0e&_nc_gid=lUklVnDjdrBsZWQ1_EqTBA&edm=AP4sbd4BAAAA&ccb=7-5&ig_cache_key=MzY3NTI0NjEyMjczNDUzNjgzMg%3D%3D.3-ccb7-5&oh=00_Afa6pdjJkvNeat1exroYlQnVFQcgKHeCDRLgHCnIp75NMA&oe=68C7A9CE&_nc_sid=7a9f4b",
+    img: undefined,
     imgText: undefined,
     location: undefined,
     startEventTime: undefined,
@@ -151,19 +130,22 @@ async function translatePosts(posts) {
       messages: [
         {
           role: "user",
-          content: ` find event name, start dateTime(YYYY-MM-DD HH:mm)(24h), endDateTime(YYYY-MM-DD HH:mm)(24h) and location from ${poster.imgText} and ${poster.desc}. return an array where it contains event name, startDateTime, endDateTime and location, if you cannot find any just give null, JUST give me THE ONLY ARRAY BRACKET IN [] with 4 string elments, now comments, no any additional stuff.`,
+          content: ` find event name, start dateTime(YYYY-MM-DD HH:mm)(24h), endDateTime(YYYY-MM-DD HH:mm)(24h) and location from ${poster.imgText} and ${poster.desc}. return an array where it contains event name, startDateTime, endDateTime and location. If you cannot find any of them in the provided text, return TBD. Do not invent dates, times, or locations.” JUST give me THE ONLY ARRAY BRACKET IN [] with 4  stringelments, no comments, no any additional stuff.`,
         },
       ],
     });
-    const detail = ans.message.content.slice(1, -1).split(",");
-    // console.log("cra yet", ans.message.content, detail, detail[0]);
+    const detail = ans.message.content.slice(2, -2).split('", "');
+    console.log("cra yet", ans.message.content, detail, detail[0] + detail[1]);
     poster.title = detail[0];
     poster.startEventTime = detail[1];
     poster.endEventTime = detail[2];
     poster.location = detail[3];
+    if (poster.startEventTime) {
+      poster.translated = 1;
+    }
   }
 }
 
 translatePosts(uwcsc).then((hey) => {
-  console.log(uwcsc);
+  console.log("updated", uwcsc);
 });
