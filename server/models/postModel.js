@@ -6,7 +6,8 @@ class postModel {
     this.img = post.img;
     this.imgText = post.imgText;
     this.location = post.location;
-    this.eventTime = post.eventTime;
+    this.startEventTime = post.startEventTime;
+    this.endEventTime = post.endEventTime;
     this.igLink = post.igLink;
     this.accountName = post.accountName;
     this.creatTime = post.creatTime;

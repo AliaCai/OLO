@@ -3,6 +3,8 @@ const tesseract = require("node-tesseract-ocr");
 const chrono = require("chrono-node");
 const nlp = require("compromise/two");
 const DateTime = require("luxon");
+const { default: ollama } = require("ollama/browser");
+
 const config = {
   lang: "eng",
   oem: 1,
@@ -42,7 +44,8 @@ const uwcsc = [
     img: "https://scontent-yyz1-1.cdninstagram.com/v/t51.2885-15/544878279_18056262965451410_3209650312552123614_n.jpg?stp=dst-jpg_e35_p720x720_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEwOTF4MTEwMi5zZHIuZjgyNzg3LmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QH--vMwc-tIVyA_8KdW9Yo45WjHXzbP92M7bd-nMmUZdBr5e9uZb02bRdqNbi3MbzA&_nc_ohc=wwe7eTKEl6gQ7kNvwHO-HOz&_nc_gid=lUklVnDjdrBsZWQ1_EqTBA&edm=AP4sbd4BAAAA&ccb=7-5&ig_cache_key=MzcxODY3MzU1OTA3MDc5NTU5MA%3D%3D.3-ccb7-5&oh=00_AfZH7yXAbtga-JHOFLXXrEsoWURZYQFGcKtEpx4wfFJC6w&oe=68C79AD8&_nc_sid=7a9f4b",
     imgText: undefined,
     location: undefined,
-    eventTime: undefined,
+    startEventTime: undefined,
+    endEventTime: undefined,
     igLink: "https://www.instagram.com/uwcsclub/p/DObYeZMDWdG",
     accountName: "uwcsclub",
     creatTime: 1757533242099,
@@ -55,7 +58,8 @@ const uwcsc = [
     img: "https://scontent-yyz1-1.cdninstagram.com/v/t51.2885-15/521319619_18051120230451410_1410477958313669120_n.jpg?stp=dst-jpg_e35_s720x720_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEwODB4MTA4MC5zZHIuZjgyNzg3LmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QH--vMwc-tIVyA_8KdW9Yo45WjHXzbP92M7bd-nMmUZdBr5e9uZb02bRdqNbi3MbzA&_nc_ohc=w5p573W42cMQ7kNvwEgwdJS&_nc_gid=lUklVnDjdrBsZWQ1_EqTBA&edm=AP4sbd4BAAAA&ccb=7-5&ig_cache_key=MzY3OTE2MDM4NjcyOTU3NzE0MA%3D%3D.3-ccb7-5&oh=00_Afaatc4rWHn_lZaoIAdVXeM0_BeTuGU2toljSxBoR42glQ&oe=68C78B0E&_nc_sid=7a9f4b",
     imgText: undefined,
     location: undefined,
-    eventTime: undefined,
+    startEventTime: undefined,
+    endEventTime: undefined,
     igLink: "https://www.instagram.com/uwcsclub/p/DMPAODytIq0",
     accountName: "uwcsclub",
     creatTime: 1757533242100,
@@ -77,7 +81,8 @@ const uwcsc = [
     img: "https://scontent-yyz1-1.cdninstagram.com/v/t51.2885-15/517735285_18050620115451410_8676771341342949000_n.jpg?stp=dst-jpg_e35_s720x720_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEzMzd4MTMzNy5zZHIuZjgyNzg3LmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QH--vMwc-tIVyA_8KdW9Yo45WjHXzbP92M7bd-nMmUZdBr5e9uZb02bRdqNbi3MbzA&_nc_ohc=7JkcDsZg1AcQ7kNvwEcnl0e&_nc_gid=lUklVnDjdrBsZWQ1_EqTBA&edm=AP4sbd4BAAAA&ccb=7-5&ig_cache_key=MzY3NTI0NjEyMjczNDUzNjgzMg%3D%3D.3-ccb7-5&oh=00_Afa6pdjJkvNeat1exroYlQnVFQcgKHeCDRLgHCnIp75NMA&oe=68C7A9CE&_nc_sid=7a9f4b",
     imgText: undefined,
     location: undefined,
-    eventTime: undefined,
+    startEventTime: undefined,
+    endEventTime: undefined,
     igLink: "https://www.instagram.com/uwcsclub/p/DMBGOBXuUiA",
     accountName: "uwcsclub",
     creatTime: 1757533242100,
@@ -119,20 +124,43 @@ async function imgToText(img) {
 //   }
 // }
 
+// async function translatePosts(posts) {
+//   for (poster of posts) {
+//     poster.imgText = await imgToText(poster.img);
+//     let imgDate = nlp(poster.imgText).match("#Date").text();
+//     let descDate = nlp(poster.desc).match("#Date").text();
+//     console.log("hey what is date", [imgDate, descDate], "hey what is date", [
+//       chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].text,
+//       chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].text,
+//     ]);
+
+//     let imgPlace = nlp(poster.imgText).match("#Place").text(); //  doc.match('(DC|E7|MC) #Value').tag('Place', 'building-room')
+
+//     let descPlace = nlp(poster.desc).match("#Place").text();
+//     console.log("hey what is location", imgPlace, descPlace);
+//   }
+// }
+
 async function translatePosts(posts) {
+  console.log("hey");
+
   for (poster of posts) {
     poster.imgText = await imgToText(poster.img);
-    let imgDate = nlp(poster.imgText).match("#Date").text();
-    let descDate = nlp(poster.desc).match("#Date").text();
-    console.log("hey what is date", [imgDate, descDate], "hey what is date", [
-      chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].text,
-      chrono.parse(poster.imgText)[0] && chrono.parse(poster.imgText)[0].text,
-    ]);
-
-    let imgPlace = nlp(poster.imgText).match("#Place").text(); //  doc.match('(DC|E7|MC) #Value').tag('Place', 'building-room')
-
-    let descPlace = nlp(poster.desc).match("#Place").text();
-    console.log("hey what is location", imgPlace, descPlace);
+    const ans = await ollama.chat({
+      model: "llama3.1",
+      messages: [
+        {
+          role: "user",
+          content: ` find event name, start dateTime(YYYY-MM-DD HH:mm)(24h), endDateTime(YYYY-MM-DD HH:mm)(24h) and location from ${poster.imgText} and ${poster.desc}. return an array where it contains event name, startDateTime, endDateTime and location, if you cannot find any just give null, JUST give me THE ONLY ARRAY BRACKET IN [] with 4 string elments, now comments, no any additional stuff.`,
+        },
+      ],
+    });
+    const detail = ans.message.content.slice(1, -1).split(",");
+    // console.log("cra yet", ans.message.content, detail, detail[0]);
+    poster.title = detail[0];
+    poster.startEventTime = detail[1];
+    poster.endEventTime = detail[2];
+    poster.location = detail[3];
   }
 }
 

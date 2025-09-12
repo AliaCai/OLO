@@ -29,6 +29,7 @@
     "luxon": "^3.7.2",
     "node-tesseract-ocr": "^2.2.1",
     "nodemailer": "^7.0.5",
+    "ollama": "^0.5.17",
     "pg": "^8.16.3",
     "puppeteer": "^24.19.0",
     "tesseract.js": "^6.0.1"
