@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const puppeteer = require("puppeteer");
 const postModel = require("./models/postModel");
+const db = require("./db/pool");
 
 async function igLogin(page, accountName) {
   await page.goto("https://www.instagram.com");
@@ -44,6 +45,33 @@ async function getPosts(accountName) {
               translated: 0,
             })
           );
+
+          //add to db
+          const add_poster =
+            "INSERT INTO olo_poster(poster_ig_id, event_desc, img_url, ig_link, account_name, create_time, update_time) VALUES ($1,$2,$3,$4,$5,$6, $7)";
+          db.query(
+            add_poster,
+            [
+              post["code"],
+              post["caption"]["text"],
+              post["image_versions2"]["candidates"][0]["url"],
+
+              "https://www.instagram.com/" + accountName + "/p/" + post["code"],
+
+              accountName,
+              Date.now(),
+              Date.now(),
+            ],
+            (err, res) => {
+              if (!err) {
+                console.log("add successfullt", res);
+              } else {
+                console.log("err happens between", err);
+              }
+            }
+          );
+
+          console.log("finish");
 
           //   console.log(
           //     "\n\n\nfind",

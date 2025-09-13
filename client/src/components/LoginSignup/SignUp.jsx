@@ -25,11 +25,11 @@ const SignUp = (props) => {
   function handleChange(e){
     const {name,value}=e.target
     setRegister({...register,[name]:value})
-    console.log('before',name,value,validateUser.validateAt(name, {name:value}).then(()=>{}).catch(()=>{}))
+    // console.log('before',name,value,validateUser.validateAt(name, {name:value}).then(()=>{}).catch(()=>{}))
   
       validateUser.validateAt(name, {[name]:value}).then(()=>setErrMsgs({...errMsgs,[name]:''})).catch((err)=>{
       setErrMsgs({...errMsgs,[name]:err.errors[0]});
-      console.log('still errors',err.errors,name, errMsgs)
+      // console.log('still errors',err.errors,name, errMsgs)
 
     })
 
