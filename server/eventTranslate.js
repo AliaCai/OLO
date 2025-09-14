@@ -4,12 +4,14 @@ const tesseract = require("node-tesseract-ocr");
 // const nlp = require("compromise/two");
 // const DateTime = require("luxon");
 const { default: ollama } = require("ollama/browser");
+const db = require("./db/pool");
+const { search_value } = require("./db/db_actions");
 
-const config = {
-  lang: "eng",
-  oem: 1,
-  psm: 3,
-};
+// const config = {
+//   lang: "eng",
+//   oem: 1,
+//   psm: 3,
+// };
 
 const uwcsc = [
   {
@@ -121,6 +123,8 @@ async function imgToText(img) {
 // }
 
 async function translatePosts(posts) {
+  const posters = await search_value("olo_poster", "is_translate", 0);
+
   console.log("hey");
 
   for (poster of posts) {
