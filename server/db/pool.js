@@ -9,5 +9,5 @@ const db = new Pool({
   password: process.env.DB_PASSWORD,
   database: "postgres",
 });
-console.log("password is", process.env.DB_PASSWORD);
+// console.log("password is", process.env.DB_PASSWORD);
 module.exports = db;

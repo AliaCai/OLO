@@ -123,25 +123,25 @@ async function imgToText(img) {
 // }
 
 async function translatePosts() {
-  const posts = await search_value("olo_post", "is_translate", 1);
+  const posts = await search_value("olo_post", "is_translate", 0);
   if (posts.length >= 1) {
     for (post of posts) {
-      console.log("??");
+      // console.log("??", posts);
       post.img_text = await imgToText(post.img_url);
 
-      console.log(
-        "hey",
-        post.img_url,
-        post.img_text,
-        await imgToText(post.img_url)
-      );
+      // console.log(
+      //   "hey",
+
+      //   post.img_text,
+      //   post.img_text.replace("\n", "")
+      // );
 
       const ans = await ollama.chat({
         model: "llama3.1",
         messages: [
           {
             role: "user",
-            content: ` find event name, start dateTime(YYYY-MM-DD HH:mm)(24h), endDateTime(YYYY-MM-DD HH:mm)(24h) and location from ${post.img_text} and ${post.event_desc}. return an array where it contains event name, startDateTime, endDateTime and location. If you cannot find any of them in the provided text, return TBD. It is very very important that you do not invent dates, times, or locations.” JUST give me THE ONLY ARRAY BRACKET IN [] with 4 string elements in the required format (if given dateTime is not in the right format, do the conversion), no comments, no any additional stuff.`,
+            content: ` find event name, startdateTime(YYYY-MM-DD HH:mm)(24h), endDateTime(YYYY-MM-DD HH:mm)(24h) and location from ${post.img_text} and ${post.event_desc}. return an array where it contains event name, startDateTime, endDateTime and location. StartDateTime and endDateTime can take reference from the time ${post.post_create_time} when it is necessary and if the year is not specified, choose 2025. If you cannot find information in the provided text, return TBD. Do not invent event name, startDateTime, endDateTime or locations.” JUST give me THE ONLY ARRAY BRACKET IN [] with 4 string elements in the required format (if given startdateTime and endDateTime is not in the (YYYY-MM-DD HH:mm)(24h) format, do the conversion, and not include any things not included in the format), no comments, no any additional stuff.`,
           },
         ],
       });
