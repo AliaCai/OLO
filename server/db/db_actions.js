@@ -17,4 +17,5 @@ function search_value(table_name, column_name, value) {
     });
   });
 }
+
 module.exports = { search_value };

@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const momment = require("moment-timezone");
 const puppeteer = require("puppeteer");
 const postModel = require("./models/postModel");
 const db = require("./db/pool");
@@ -48,7 +48,7 @@ async function getPosts(accountName) {
 
           //add to db
           const add_poster =
-            "INSERT INTO olo_poster(poster_ig_id, event_desc, img_url, ig_link, account_name) VALUES ($1,$2,$3,$4,$5)";
+            "INSERT INTO olo_post(poster_ig_id, event_desc, img_url, ig_link, account_name,post_create_time) VALUES ($1,$2,$3,$4,$5,$6)";
           db.query(
             add_poster,
             [
@@ -59,6 +59,7 @@ async function getPosts(accountName) {
               "https://www.instagram.com/" + accountName + "/p/" + post["code"],
 
               accountName,
+              post["taken_at"],
             ],
             (err, res) => {
               if (!err) {
