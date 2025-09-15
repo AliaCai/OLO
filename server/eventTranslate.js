@@ -138,6 +138,7 @@ async function translatePosts(posts) {
         },
       ],
     });
+
     const detail = ans.message.content.slice(2, -2).split('", "');
     console.log("cra yet", ans.message.content, detail, detail[0] + detail[1]);
     poster.title = detail[0];
