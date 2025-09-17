@@ -5,7 +5,7 @@ const postModel = require("./models/postModel");
 const db = require("./db/pool");
 const { search_value } = require("./db/db_actions");
 
-async function igLogin(page, accountName) {
+async function igLogin(page) {
   await page.goto("https://www.instagram.com");
   await page.type('input[name="username"]', process.env.ig_username);
   await page.type("input[name='password']", process.env.ig_password);
@@ -13,92 +13,99 @@ async function igLogin(page, accountName) {
   await page.waitForNavigation();
 }
 
-async function getPosts(accountName) {
+async function getPosts(accountNames) {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   const posters = [];
   page.on("response", async (res) => {
-    const url = res.url();
     if (
       res.request().method() === "POST" &&
-      url.includes("https://www.instagram.com/graphql/query")
+      res.url().includes("https://www.instagram.com/graphql/query")
     ) {
-      const item = JSON.parse(await res.text());
-      if (
-        item["data"] &&
-        "xdt_api__v1__feed__user_timeline_graphql_connection" in item["data"]
-      ) {
-        const posts = await item["data"][
-          "xdt_api__v1__feed__user_timeline_graphql_connection"
-        ]["edges"];
-        for (post of posts) {
-          post = post["node"];
-          posters.push(
-            new postModel({
-              postIgID: post["code"],
-              desc: post["caption"]["text"],
-              img: post["image_versions2"]["candidates"][0]["url"],
-              igLink:
-                "https://www.instagram.com/" +
-                accountName +
-                "/p/" +
-                post["code"],
-              accountName: accountName,
-              creatTime: Date.now(),
-              translated: 0,
-            })
-          );
-
-          //add to db
-          const find_post = await search_value(
-            "olo_post",
-            "poster_ig_id",
-            post["code"]
-          );
-
-          if (find_post == 0) {
-            const add_poster =
-              "INSERT INTO olo_post(poster_ig_id, event_desc, img_url, ig_link, account_name,post_create_time) VALUES ($1,$2,$3,$4,$5,$6)";
-            db.query(
-              add_poster,
-              [
-                post["code"],
-                post["caption"]["text"],
-                post["image_versions2"]["candidates"][0]["url"],
-
-                "https://www.instagram.com/" +
-                  accountName +
+      try {
+        const item = JSON.parse(await res.text());
+        if (
+          item["data"] &&
+          "xdt_api__v1__feed__user_timeline_graphql_connection" in item["data"]
+        ) {
+          const posts = await item["data"][
+            "xdt_api__v1__feed__user_timeline_graphql_connection"
+          ]["edges"];
+          for (post of posts) {
+            post = post["node"];
+            username = post["user"]["username"];
+            posters.push(
+              new postModel({
+                postIgID: post["code"],
+                desc: post["caption"]["text"],
+                img: post["image_versions2"]["candidates"][0]["url"],
+                igLink:
+                  "https://www.instagram.com/" +
+                  username +
                   "/p/" +
                   post["code"],
-
-                accountName,
-                moment.tz(post["taken_at"] * 1000, "America/Toronto").format(),
-              ],
-              (err, res) => {
-                if (!err) {
-                  console.log("add successfullt", res);
-                } else {
-                  console.log("err happens between", err);
-                }
-              }
+                accountName: username,
+                creatTime: Date.now(),
+                translated: 0,
+              })
             );
-          } else {
-            console.log("post with id", post["code"], "is in db already");
-          }
 
-          console.log("finish");
+            //add to db
+            const find_post = await search_value(
+              "olo_post",
+              "poster_ig_id",
+              post["code"]
+            );
+
+            if (find_post == 0) {
+              const add_poster =
+                "INSERT INTO olo_post(poster_ig_id, event_desc, img_url, ig_link, account_name,post_create_time) VALUES ($1,$2,$3,$4,$5,$6)";
+              db.query(
+                add_poster,
+                [
+                  post["code"],
+                  post["caption"]["text"],
+                  post["image_versions2"]["candidates"][0]["url"],
+
+                  "https://www.instagram.com/" +
+                    username +
+                    "/p/" +
+                    post["code"],
+
+                  username,
+                  moment
+                    .tz(post["taken_at"] * 1000, "America/Toronto")
+                    .format(),
+                ],
+                (err, res) => {
+                  if (!err) {
+                    console.log("add successfullt", res);
+                  } else {
+                    console.log("err happens between", err);
+                  }
+                }
+              );
+            } else {
+              console.log("post with id", post["code"], "is in db already");
+            }
+
+            // console.log("finish");
+          }
+          // console.log("hey", posters);
         }
-        console.log("hey", posters);
+      } catch (err) {
+        console.log("find err", err);
       }
     }
   });
 
-  await igLogin(page, accountName);
-
-  page.goto("https://www.instagram.com/" + accountName);
-  console.log("in");
+  await igLogin(page);
+  for (accountName of accountNames) {
+    await page.goto("https://www.instagram.com/" + accountName);
+    console.log("in");
+  }
 }
 
 //login first -> acc page -> get wanted info
-getPosts("uwaterloowics");
+getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc"]);

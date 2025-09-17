@@ -123,7 +123,7 @@ async function imgToText(img) {
 // }
 
 async function translatePosts() {
-  const posts = await search_value("olo_post", "is_translate", 0);
+  const posts = await search_value("olo_post", "is_translate", 1);
   if (posts.length >= 1) {
     for (post of posts) {
       // console.log("??", posts);
@@ -157,7 +157,7 @@ async function translatePosts() {
       //add to db
 
       const update_post =
-        "UPDATE olo_post SET event_title=$1, img_text=$2, location=$3, event_start_time=$4, event_end_time=$5, is_translate=$6 WHERE poster_ig_id=$7";
+        "UPDATE olo_post SET event_title=$1, img_text=$2, location=$3, event_start_time=$4, event_end_time=$5, is_translate=$6, update_time=$7 WHERE poster_ig_id=$8";
       db.query(
         update_post,
         [
@@ -167,9 +167,16 @@ async function translatePosts() {
           detail[1] != "TBD" ? detail[1] : null,
           detail[2] != "TBD" ? detail[2] : null,
           1,
+          new Date().toISOString().replace("T", " ").replace("Z", " "),
           post.poster_ig_id,
         ],
         (err, res) => {
+          console.log(
+            "date is",
+            Date.now(),
+            new Date(),
+            new Date().toISOString().replace("T", " ").replace("Z", " ")
+          );
           if (!err) {
             console.log("add successfullt", res);
           } else {
