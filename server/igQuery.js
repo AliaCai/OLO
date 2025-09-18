@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cron = require("node-cron");
 const moment = require("moment-timezone");
 const puppeteer = require("puppeteer");
 const postModel = require("./models/postModel");
@@ -108,4 +109,13 @@ async function getPosts(accountNames) {
 }
 
 //login first -> acc page -> get wanted info
-getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc"]);
+const task = () => {
+  // getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc"]);
+  console.log("hey");
+};
+
+cron.schedule(" */2 * * * *", () => {
+  console.log("before");
+  getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc"]);
+  console.log("after");
+}); //every seconds for now

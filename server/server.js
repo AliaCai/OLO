@@ -5,6 +5,7 @@ const crypto = require("crypto-js");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const { instagram } = require("instagram-scraper-api");
+require("./igQuery");
 
 const app = express();
 app.use(express.json());
@@ -45,4 +46,6 @@ instagram
 console.log("hey");
 //whatever, let me try it out first
 
-app.listen(5000);
+app.listen(5000, () => {
+  console.log("run");
+});
