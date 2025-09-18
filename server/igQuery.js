@@ -5,6 +5,7 @@ const puppeteer = require("puppeteer");
 const postModel = require("./models/postModel");
 const db = require("./db/pool");
 const { search_value } = require("./db/db_actions");
+// const translate = require("./eventTranslate");
 
 async function igLogin(page) {
   await page.goto("https://www.instagram.com");
@@ -95,8 +96,11 @@ async function getPosts(accountNames) {
           }
           // console.log("hey", posters);
         }
+
+        await browser.close();
       } catch (err) {
         console.log("find err", err);
+        return false;
       }
     }
   });
@@ -106,16 +110,13 @@ async function getPosts(accountNames) {
     await page.goto("https://www.instagram.com/" + accountName);
     console.log("in");
   }
+
+  return true;
 }
 
-//login first -> acc page -> get wanted info
-const task = () => {
-  // getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc"]);
-  console.log("hey");
-};
-
-cron.schedule(" */2 * * * *", () => {
-  console.log("before");
-  getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc"]);
-  console.log("after");
-}); //every seconds for now
+cron.schedule(" * * * * *", async () => {
+  await getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc", "waterloomath"]);
+  await translate.translatePosts().then(() => {
+    console.log("after translation");
+  });
+});
