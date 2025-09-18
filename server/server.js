@@ -4,7 +4,6 @@ const express = require("express");
 const crypto = require("crypto-js");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const { instagram } = require("instagram-scraper-api");
 require("./igQuery");
 
 const app = express();
@@ -38,14 +37,8 @@ function authenticateToken(req, res, next) {
   });
 }
 
-instagram
-  .user("willsmith")
-  .then((user) => console.log(user))
-  .catch((err) => console.error(err));
-
-console.log("hey");
 //whatever, let me try it out first
 
 app.listen(5000, () => {
-  console.log("run");
+  console.log("run on port");
 });

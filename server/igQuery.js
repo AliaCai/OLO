@@ -96,26 +96,27 @@ async function getPosts(accountNames) {
           }
           // console.log("hey", posters);
         }
-
-        await browser.close();
       } catch (err) {
         console.log("find err", err);
-        return false;
       }
+
+      await browser.close();
     }
   });
 
   await igLogin(page);
   for (accountName of accountNames) {
     await page.goto("https://www.instagram.com/" + accountName);
-    console.log("in");
+    console.log("logged in");
   }
-
-  return true;
 }
 
 cron.schedule(" * * * * *", async () => {
+  //0 12
+
+  console.log("start");
   await getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc", "waterloomath"]);
+  console.log("finih querying");
   await translate.translatePosts().then(() => {
     console.log("after translation");
   });
