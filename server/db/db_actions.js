@@ -7,7 +7,7 @@ function search_value(table_name, column_name, value) {
   // console.log("db is :", db);
   return new Promise((resolve, reject) => {
     db.query(search_query, [value], (err, res) => {
-      console.log("which step");
+      console.log("search db values");
       if (!err) {
         return resolve(res.rows);
       } else {

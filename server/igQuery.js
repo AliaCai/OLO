@@ -5,9 +5,10 @@ const puppeteer = require("puppeteer");
 const postModel = require("./models/postModel");
 const db = require("./db/pool");
 const { search_value } = require("./db/db_actions");
-// const translate = require("./eventTranslate");
+const { imgToText, translatePosts } = require("./eventTranslate");
 
 async function igLogin(page) {
+  console.log("login");
   await page.goto("https://www.instagram.com");
   await page.type('input[name="username"]', process.env.ig_username);
   await page.type("input[name='password']", process.env.ig_password);
@@ -16,6 +17,7 @@ async function igLogin(page) {
 }
 
 async function getPosts(accountNames) {
+  console.log("getPosts");
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
@@ -85,6 +87,7 @@ async function getPosts(accountNames) {
                     console.log("add successfullt", res);
                   } else {
                     console.log("err happens between", err);
+                    return false;
                   }
                 }
               );
@@ -98,26 +101,37 @@ async function getPosts(accountNames) {
         }
       } catch (err) {
         console.log("find err", err);
+        return false;
       }
-
-      await browser.close();
     }
   });
 
-  await igLogin(page);
+  await igLogin(page).then(() => {});
   for (accountName of accountNames) {
     await page.goto("https://www.instagram.com/" + accountName);
     console.log("logged in");
   }
+
+  await browser.close();
+  console.log("out");
+  return true;
 }
 
-cron.schedule(" * * * * *", async () => {
-  //0 12
+// getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc", "waterloomath"]);
 
+cron.schedule("16 13 18 * *", async () => {
   console.log("start");
-  await getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc", "waterloomath"]);
-  console.log("finih querying");
-  await translate.translatePosts().then(() => {
+  if (
+    await getPosts([
+      "uwcsclub",
+      "uwaterloowics",
+      "uwaterloodsc",
+      "waterloomath",
+      "wits.uwo",
+    ])
+  ) {
+    console.log("querried successfully");
+    await translatePosts();
     console.log("after translation");
-  });
+  }
 });
