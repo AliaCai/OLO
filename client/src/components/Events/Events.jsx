@@ -1,6 +1,8 @@
 import './Events.css'
 import React from 'react'
-import Events_Calender from './Events_Calender/Events_Calender'
+// import Events_Calender from './Events_Calender/Events_Calender'
+import FullCalender from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
 function Events() {
   return (
     <div className='events'>
@@ -20,7 +22,7 @@ function Events() {
       </div>
       <div className="events_switch"></div>
       <div className="events_alter">
-        <div className="events_alter_calender"><Events_Calender /></div>
+        <div className="events_alter_calender"><FullCalender plugins={[dayGridPlugin]} initialView='dayGridWeek' /></div>
         <div className="events_alter_list events_disable"></div>
       </div>
     </div>
