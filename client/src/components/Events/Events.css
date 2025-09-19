@@ -33,7 +33,15 @@
 }
 
 
-
+.eventDetail{
+    background-color: #b7b6b6;
+    padding:1vw;
+    width:30vw;
+    border-radius: 1rem;
+}
+.eventDetail>div{
+    margin:1vw;
+}
 /* 
 .events_alter{
     height:65vh;
