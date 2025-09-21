@@ -1,5 +1,5 @@
 import './Events.css'
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 // import Events_Calender from './Events_Calender/Events_Calender'
 import FullCalender from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -17,8 +17,10 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 function Events() {
+  const calendarRef=useRef()
   const [eventDetail, setEventDetail]=useState(null)
   const [eventDetailPos, setEventDetailPos]=useState(null)
+  const [calendarLayout, setCalendarLayout]=useState(true)
   const event=[{title:"CSC circle",
                 start:'2025-09-21 00:00:00',
                 end:'2025-09-21 10:00:00',
@@ -97,12 +99,21 @@ function Events() {
     // arg.el.style.backgroundColor='red'
     // console.log( arg.event._def, arg.el,arg.date,arg.jsEvent, arg.view, arg.resource)
 
-  return <div>yo</div>
+
     
   }
 
   function handelCloseEvent(){
     setEventDetail(null)
+  }
+
+  function handleLayougChange(){
+    console.log('ori',calendarLayout)
+      setCalendarLayout(!calendarLayout)
+      const calendarApi=calendarRef.current.getApi()
+      calendarApi.changeView(calendarLayout?'timeGridWeek':'listWeek')
+
+    console.log(calendarLayout)
   }
   return (
     <div className='events' onClick={handelCloseEvent}>
@@ -120,9 +131,9 @@ function Events() {
         </div>
         <div className="events_reset">reset</div>
       </div>
-      <div className="events_switch">  <FormControlLabel control={<Switch defaultChecked />} label="Calender" /></div>
+      <div className="events_switch">  <FormControlLabel onClick={handleLayougChange} control={<Switch defaultChecked />} label="Calender" /></div>
       <div className="events_alter">
-        <div className="events_alter_calender"><FullCalender 
+        <div className="events_alter_calender"><FullCalender     ref={calendarRef}
                                                                   nowIndicator={true}
                                                                    plugins={[ dayGridPlugin,timeGridPlugin,interactionPlugin,ListPlugin]}
                                                                     eventClick={handleDateClick} 
