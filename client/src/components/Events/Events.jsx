@@ -5,6 +5,7 @@ import FullCalender from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import  interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
+import eventEg from '../assets/event_example.jpg'
 function Events() {
   const [eventDetail, setEventDetail]=useState(null)
   const event=[{title:"CSC circle",
@@ -14,7 +15,7 @@ function Events() {
                 description:'🏸Smash your way into summer by participating\n in CSC’s own badminton tourna\n ment July 4th 8 pm PAC Small Included: free snacks & drinks, rackets, good vibes, awesome people, and intense competitio\n n See you soon!🙈',
                 accountName:'n1',
                 color:'light-blue'},
-                {title:'wix Meta',
+                {title:'Wix Meta',
                 start:'2025-09-20 15:00:00',
                 end:'2025-09-20 19:00:00',
                 img:'https://scontent-yyz1-1.cdninstagram.com/v/t51.2885-15/502467169_18049437413451410_1178223913794747179_n.jpg?stp=dst-jpg_e35_s720x720_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEwODB4MTA4MC5zZHIuZjc1NzYxLmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QGQ_4JZpzF3wXfuO6DBgGV-5upUys_7CAjOrla0NFwNdrET944yxfDqVHqqVD7YQWs&_nc_ohc=H7lnoCvdUVoQ7kNvwFUsWLC&_nc_gid=FZwiImHYcaGtks9vVE12RA&edm=AP4sbd4BAAAA&ccb=7-5&ig_cache_key=MzY2NTk2MzM5NDQ4MjgxODM2NQ%3D%3D.3-ccb7-5&oh=00_AfbKOcBDHqh0paa79SarqlTu82r-JPOBhHxO_69nzvZbtA&oe=68D23A14&_nc_sid=7a9f4b',
@@ -74,10 +75,19 @@ function Events() {
         <div className="eventDetails">{
           eventDetail &&
           <div className="eventDetail">
+            <div className="eventDetail_tool_bar">
+              <div className="event_detail_buttons">
+                <div className="event_detail_add">Add</div>
+                <div className="event_detail_interest">Intrest</div>
+                <div className="event_detail_report">Report</div>
+              </div>
+              <div className="eventDetail_toolBar_cross">x</div>
+            </div>
+            
               <div className="eventDetail_title">{eventDetail.title}</div>
-              <img crossOrigin='anonymous' src={eventDetail.img} alt='event img' />
+              <img className="eventDetail_img" crossOrigin='anonymous' src={eventEg} alt='event img' />
               <div className="eventDetail_desc">{eventDetail.des}</div>
-              <div className="eventDetail_accountN">{eventDetail.accountName}</div>
+              <div className="eventDetail_accountName">{eventDetail.accountName}</div>
 
           </div>
             }</div>

@@ -34,13 +34,52 @@
 
 
 .eventDetail{
-    background-color: #b7b6b6;
-    padding:1vw;
+    background-color: #F0F4F8;
+    padding:0.5rem 2rem 3rem 2rem;
+    
     width:30vw;
     border-radius: 1rem;
+    box-shadow: 0 0 1rem rgb(129, 129, 129);
 }
 .eventDetail>div{
-    margin:1vw;
+    margin:2rem;
+}
+
+.eventDetail_tool_bar{
+    display: flex;
+}
+
+.event_detail_buttons{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+.event_detail_buttons>div{
+    margin: 0 0.2rem;
+    padding:1.1rem 0;
+    display: flex;
+    width:5rem;
+    background-color: rgb(252, 252, 252);
+    box-shadow: 0.1rem 0.1rem  black;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+}
+
+
+.eventDetail_title {
+    font-size: 1.5rem;
+}
+.eventDetail_img{
+    width: 100%;
+     border-radius: 1rem;
+}
+
+.eventDetail_accountName{
+    display: inline;
+    background-color: rgba(239, 184, 44, 0.906);
+    border-radius: 1rem;
+    padding:1% 2%;
 }
 /* 
 .events_alter{

@@ -80,7 +80,7 @@ async function translatePosts() {
         messages: [
           {
             role: "user",
-            content: `Extract the event name, startDateTime (YYYY-MM-DD HH:mm, 24h), endDateTime (YYYY-MM-DD HH:mm, 24h), and location from ${post.img_text} and ${post.event_desc}. Return the result only as an array with four string elements in this exact order: [event name, startDateTime, endDateTime, location].
+            content: `Extract the event name, event startDateTime (YYYY-MM-DD HH:mm, 24h), event endDateTime (YYYY-MM-DD HH:mm, 24h), and event location from ${post.img_text} and ${post.event_desc}. Return the result only as an array with four string elements in this exact order: [event name, event startDateTime, event endDateTime, event location].
                     If the year is missing, assume 2025.
                     All dates/times must be converted to YYYY-MM-DD HH:mm (24-hour). Do not use any other formats even with more detials and no dot include any not asked word.
 

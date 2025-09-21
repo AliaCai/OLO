@@ -119,7 +119,7 @@ async function getPosts(accountNames) {
 
 // getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc", "waterloomath"]);
 
-cron.schedule("16 13 18 * *", async () => {
+cron.schedule("46 16 18 * *", async () => {
   console.log("start");
   if (
     await getPosts([
