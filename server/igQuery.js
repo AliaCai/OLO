@@ -23,10 +23,12 @@ async function getPosts(accountNames) {
 
   const posters = [];
   page.on("response", async (res) => {
+    console.log(res.request().method());
     if (
       res.request().method() === "POST" &&
       res.url().includes("https://www.instagram.com/graphql/query")
     ) {
+      console.log("in", res.request().method());
       try {
         const item = JSON.parse(await res.text());
         if (
@@ -63,6 +65,7 @@ async function getPosts(accountNames) {
             );
 
             if (find_post == 0) {
+              console.log("new post", post["caption"]["text"]);
               const add_poster =
                 "INSERT INTO olo_post(poster_ig_id, event_desc, img_url, ig_link, account_name,post_create_time) VALUES ($1,$2,$3,$4,$5,$6)";
               db.query(
@@ -109,7 +112,7 @@ async function getPosts(accountNames) {
   await igLogin(page).then(() => {});
   for (accountName of accountNames) {
     await page.goto("https://www.instagram.com/" + accountName);
-    console.log("logged in");
+    console.log("to new link");
   }
 
   await browser.close();
@@ -119,7 +122,7 @@ async function getPosts(accountNames) {
 
 // getPosts(["uwcsclub", "uwaterloowics", "uwaterloodsc", "waterloomath"]);
 
-cron.schedule("46 16 18 * *", async () => {
+cron.schedule("49 16 23 * *", async () => {
   console.log("start");
   if (
     await getPosts([

@@ -73,14 +73,14 @@ async function translatePosts() {
       // console.log("??", posts);
       post.img_text = await imgToText(post.img_url);
 
-      console.log("hey", post.img_text.replace("\n", ""));
+      // console.log("hey", post.img_text.replace("\n", ""));
 
       const ans = await ollama.chat({
         model: "llama3.1",
         messages: [
           {
             role: "user",
-            content: `Extract the event name, event startDateTime (YYYY-MM-DD HH:mm, 24h), event endDateTime (YYYY-MM-DD HH:mm, 24h), and event location from ${post.img_text} and ${post.event_desc}. Return the result only as an array with four string elements in this exact order: [event name, event startDateTime, event endDateTime, event location].
+            content: `Extract the event name, event startDateTime (YYYY-MM-DD HH:mm, 24h), event endDateTime (YYYY-MM-DD HH:mm, 24h), and event location from ${post.img_text} and ${post.event_desc}. Return the result only as an array with 4 string elements respectivly in the quotation marks in this exact order: [event name, event startDateTime, event endDateTime, event location].
                     If the year is missing, assume 2025.
                     All dates/times must be converted to YYYY-MM-DD HH:mm (24-hour). Do not use any other formats even with more detials and no dot include any not asked word.
 
