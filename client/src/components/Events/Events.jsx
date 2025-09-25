@@ -14,13 +14,18 @@ import AddIcon from '@mui/icons-material/Add';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
 import Switch from '@mui/material/Switch';
+import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/system'
+import { Theme } from '@fullcalendar/core/internal'
 
 function Events() {
   const calendarRef=useRef()
   const [eventDetail, setEventDetail]=useState(null)
   const [eventDetailPos, setEventDetailPos]=useState(null)
   const [calendarLayout, setCalendarLayout]=useState(false)
+
   const event=[{title:"CSC circle",
                 start:'2025-09-24 00:00:00',
                 end:'2025-09-24 10:00:00',
@@ -132,7 +137,7 @@ function Events() {
         </div>
         <div className="events_reset">reset</div>
       </div>
-      <div className="events_switch">  <FormControlLabel onClick={handleLayougChange} control={<Switch defaultChecked />} label="Calender" /></div>
+      <div className="events_switch"><Stack direction='row' spacing={0.3}><Typography >List</Typography> <FormControlLabel onClick={handleLayougChange} control={<Switch defaultChecked />} /><Typography >Calendar</Typography></Stack></div>
       <div className="events_alter">
         <div className="events_alter_calender"><FullCalender     ref={calendarRef}
                                                                   nowIndicator={true}
