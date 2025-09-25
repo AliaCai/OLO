@@ -20,24 +20,24 @@ function Events() {
   const calendarRef=useRef()
   const [eventDetail, setEventDetail]=useState(null)
   const [eventDetailPos, setEventDetailPos]=useState(null)
-  const [calendarLayout, setCalendarLayout]=useState(true)
+  const [calendarLayout, setCalendarLayout]=useState(false)
   const event=[{title:"CSC circle",
-                start:'2025-09-21 00:00:00',
-                end:'2025-09-21 10:00:00',
+                start:'2025-09-24 00:00:00',
+                end:'2025-09-24 10:00:00',
                 img:'https://scontent-yyz1-1.cdninstagram.com/v/t51.2885-15/502467169_18049437413451410_1178223913794747179_n.jpg?stp=dst-jpg_e35_s720x720_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEwODB4MTA4MC5zZHIuZjc1NzYxLmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QGQ_4JZpzF3wXfuO6DBgGV-5upUys_7CAjOrla0NFwNdrET944yxfDqVHqqVD7YQWs&_nc_ohc=H7lnoCvdUVoQ7kNvwFUsWLC&_nc_gid=FZwiImHYcaGtks9vVE12RA&edm=AP4sbd4BAAAA&ccb=7-5&ig_cache_key=MzY2NTk2MzM5NDQ4MjgxODM2NQ%3D%3D.3-ccb7-5&oh=00_AfbKOcBDHqh0paa79SarqlTu82r-JPOBhHxO_69nzvZbtA&oe=68D23A14&_nc_sid=7a9f4b',
                 description:'🏸Smash your way into summer by participating\n in CSC’s own badminton tourna\n ment July 4th 8 pm PAC Small Included: free snacks & drinks, rackets, good vibes, awesome people, and intense competitio\n n See you soon!🙈',
                 accountName:'n1',
                 color:'light-blue'},
                 {title:'Wix Meta',
-                start:'2025-09-22 15:00:00',
-                end:'2025-09-22 16:00:00',
+                start:'2025-09-25 15:00:00',
+                end:'2025-09-25 16:00:00',
                 img:'https://scontent-yyz1-1.cdninstagram.com/v/t51.2885-15/502467169_18049437413451410_1178223913794747179_n.jpg?stp=dst-jpg_e35_s720x720_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEwODB4MTA4MC5zZHIuZjc1NzYxLmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QGQ_4JZpzF3wXfuO6DBgGV-5upUys_7CAjOrla0NFwNdrET944yxfDqVHqqVD7YQWs&_nc_ohc=H7lnoCvdUVoQ7kNvwFUsWLC&_nc_gid=FZwiImHYcaGtks9vVE12RA&edm=AP4sbd4BAAAA&ccb=7-5&ig_cache_key=MzY2NTk2MzM5NDQ4MjgxODM2NQ%3D%3D.3-ccb7-5&oh=00_AfbKOcBDHqh0paa79SarqlTu82r-JPOBhHxO_69nzvZbtA&oe=68D23A14&_nc_sid=7a9f4b',
                 description:'🏸Smash your way into summer by participating in CSC’s own badminton tournament July 4th 8 pm PAC Small Included: free snacks & drinks, rackets, good vibes, awesome people, and intense competition See you soon!🙈tense competition See you soon!🙈',
                 accountName:'n2',
                 color:'pink'},
                               {title:'Wix Meta',
-                start:'2025-09-22 16:00:00',
-                end:'2025-09-22 17:00:00',
+                start:'2025-09-25 16:00:00',
+                end:'2025-09-25 17:00:00',
                 img:'https://scontent-yyz1-1.cdninstagram.com/v/t51.2885-15/502467169_18049437413451410_1178223913794747179_n.jpg?stp=dst-jpg_e35_s720x720_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjEwODB4MTA4MC5zZHIuZjc1NzYxLmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-yyz1-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QGQ_4JZpzF3wXfuO6DBgGV-5upUys_7CAjOrla0NFwNdrET944yxfDqVHqqVD7YQWs&_nc_ohc=H7lnoCvdUVoQ7kNvwFUsWLC&_nc_gid=FZwiImHYcaGtks9vVE12RA&edm=AP4sbd4BAAAA&ccb=7-5&ig_cache_key=MzY2NTk2MzM5NDQ4MjgxODM2NQ%3D%3D.3-ccb7-5&oh=00_AfbKOcBDHqh0paa79SarqlTu82r-JPOBhHxO_69nzvZbtA&oe=68D23A14&_nc_sid=7a9f4b',
                 description:'🏸Smash your way into summer by participating in CSC’s own badminton tournament July 4th 8 pm PAC Small Included: free snacks & drinks, rackets, good vibes, awesome people, and intense competition See you soon!🙈tense competition See you soon!🙈',
                 accountName:'n2',
@@ -112,6 +112,7 @@ function Events() {
       setCalendarLayout(!calendarLayout)
       const calendarApi=calendarRef.current.getApi()
       calendarApi.changeView(calendarLayout?'timeGridWeek':'listWeek')
+      calendarApi.setOption('headerToolbar',calendarLayout?{left:'prev next today',center:'title',right: 'timeGridWeek timeGridDay dayGridMonth'}:{left:'prev next today',center:'title',right:'listWeek listDay listMonth' })
 
     console.log(calendarLayout)
   }
@@ -138,9 +139,10 @@ function Events() {
                                                                    plugins={[ dayGridPlugin,timeGridPlugin,interactionPlugin,ListPlugin]}
                                                                     eventClick={handleDateClick} 
                                                                     selectable={true} 
+                                                                    buttonText={{listWeek:'week', listDay:'day', listMonth:'month'}}
                                                                     initialView='timeGridWeek'
                                                                     events={event} 
-                                                                    headerToolbar={{left:'prev next today',center:'title',right:'timeGridWeek timeGridDay dayGridMonth'}} /></div>
+                                                                    headerToolbar={{left:'prev next today',center:'title',right: 'timeGridWeek timeGridDay dayGridMonth'}} /></div>
         
         <div className="eventDetails">{
           eventDetail &&
@@ -155,7 +157,7 @@ function Events() {
             </div>
             
               <div className="eventDetail_title">{eventDetail.title}</div>
-              <img className="eventDetail_img" crossOrigin='anonymous' src={eventEg} alt='event img' />
+              <img className="eventDetail_img" crossOrigin='anonymous' src={eventDetail.img} alt='event img' />
               <div className="eventDetail_desc">{eventDetail.des}</div>
               <div className="eventDetail_accountName">{eventDetail.accountName}</div>
 
