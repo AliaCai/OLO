@@ -143,6 +143,7 @@ export async function translatePosts() {
       // }
     }
   }
+  console.log("finish metadata grabing ");
   return true;
 }
 
