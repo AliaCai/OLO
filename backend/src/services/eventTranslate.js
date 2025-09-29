@@ -4,8 +4,8 @@ import tesseract from "node-tesseract-ocr";
 // const nlp = require("compromise/two");
 // const DateTime = require("luxon");
 import ollama from "ollama/browser";
-import { db } from "../db/pool.js";
-import { search_value } from "../db/db_actions.js";
+import { db } from "../config/pool.js";
+import { search_value } from "../config/db_actions.js";
 
 const config = {
   lang: "eng",

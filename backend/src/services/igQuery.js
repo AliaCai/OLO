@@ -2,8 +2,8 @@ import cron from "node-cron";
 import moment from "moment-timezone";
 import puppeteer from "puppeteer";
 import { PostModel } from "../models/postModel.js";
-import { db } from "../db/pool.js";
-import { search_value } from "../db/db_actions.js";
+import { db } from "../config/pool.js";
+import { search_value } from "../config/db_actions.js";
 import { imgToText, translatePosts } from "./eventTranslate.js";
 
 async function igLogin(page) {
