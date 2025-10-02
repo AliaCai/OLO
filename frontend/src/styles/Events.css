@@ -80,7 +80,11 @@
     right: 1.3rem;
 }
 
+/* .test{
+    background-color: red;
+        height:2.5rem;
 
+} */
 
 .event_detail_buttons{
     display: flex;
@@ -159,3 +163,5 @@
     background-color: firebrick;
     display: none;
 } */
+
+

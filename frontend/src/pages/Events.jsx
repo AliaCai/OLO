@@ -23,7 +23,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-// import { styled } from '@mui/system'
+import { styled } from '@mui/system'
+import { backdropClasses } from '@mui/material'
 // import { Theme } from '@fullcalendar/core/internal'
 
 function Events() {
@@ -32,6 +33,12 @@ function Events() {
   const [eventDetailPos, setEventDetailPos]=useState(null)
   const [calendarLayout, setCalendarLayout]=useState(false)
 
+
+  const StyledDatePicker=styled(DatePicker)({
+    '.MuiPickersToolbar-root':{
+      color: "#1868DB"
+    }
+  })
   const event=[{title:"CSC circle",
                 start:'2025-09-29 00:00:00',
                 end:'2025-09-29 10:00:00',
@@ -131,13 +138,13 @@ function Events() {
     <div className='events' onClick={handelCloseEvent}>
 
       <div className="events_row_search">
-          {/* <div className=" events_searchBarDate">
+          <div className=" events_searchBarDate">
               <LocalizationProvider   dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-                  <DatePicker label="event date" />
+                  <StyledDatePicker className="test" label="event date" />
                 </DemoContainer>
               </LocalizationProvider>
-          </div> */}
+          </div>
           <div className=" events_searchBarName">
               <input className='event_searchField' placeholder="event name" type="text" />
           </div>
