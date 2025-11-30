@@ -55,7 +55,10 @@
 }
 
 
+/* .events_alter_calender{
+    background-color: red;
 
+} */
 
 .eventDetail{
     transform: scale(80%);
@@ -148,6 +151,8 @@
 .eventDetail_accountName{
     display: inline;
     background-color: rgba(239, 184, 44, 0.906);
+    color:white;
+    font-weight: 500;
     border-radius: 1rem;
     padding:1% 2%;
 }
